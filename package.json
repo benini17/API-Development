@@ -1,0 +1,21 @@
+{
+  "name": "api-development",
+  "version": "1.0.0",
+  "description": "Brazilian cities and states",
+  "main": "fsBack.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/benini17/API-Development.git"
+  },
+  "keywords": [],
+  "author": "Alex Benini Teixeira",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/benini17/API-Development/issues"
+  },
+  "homepage": "https://github.com/benini17/API-Development#readme",
+  "type": "module"
+}
