@@ -28,16 +28,6 @@ async function arrCitiesNStates() {
     function createStateJSON(i) {
       return statesData[i].Sigla;
     }
-
-    // function stateReceiver() {
-    //   citiesData.map((Nome) => Nome.Estado);
-    //   statesData.map((Nome) => Nome.ID);
-
-    //   if (Nome == Nome.Estado) {
-    //     arrCities.push(citiesData[y].Nome);
-    //   }
-    // }
-    // console.log(arrCities);
   } catch (error) {
     console.log(error);
   }
