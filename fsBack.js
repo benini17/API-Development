@@ -16,7 +16,7 @@ async function arrCitiesNStates() {
     }
 
     function createStateJSON(i) {
-      return {statesData[i].Sigla};
+      return statesData[i].Sigla;
     }
 
     function stateReceiver() {
