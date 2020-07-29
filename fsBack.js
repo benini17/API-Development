@@ -11,6 +11,8 @@ async function arrCitiesNStates() {
 
     let arrCities = [];
 
+    await fs.mkdir('./States/');
+
     for (let i = 0; i < statesData.length; i++) {
       for (let index = 0; index < citiesData.length; index++) {
         let city = citiesData[index];
@@ -20,7 +22,10 @@ async function arrCitiesNStates() {
       }
       console.log(arrCities);
       await JSON.stringify(
-        fs.writeFile(`${createStateJSON(i)}.json`, JSON.stringify(arrCities))
+        fs.writeFile(
+          `./States/${createStateJSON(i)}.json`,
+          JSON.stringify(arrCities)
+        )
       );
       arrCities = [];
     }
