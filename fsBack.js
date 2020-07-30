@@ -40,6 +40,7 @@ async function arrCitiesNStates() {
     }
 
     findBiggestStates();
+    findSmallestStates();
 
     function createStateJSON(i) {
       return statesData[i].Sigla;
@@ -103,5 +104,46 @@ async function findBiggestStates() {
     );
   } catch (error) {
     console.log('findBiggestStates -> error', error);
+  }
+}
+
+async function findSmallestStates() {
+  try {
+    const statesData = JSON.parse(await fs.readFile('Estados.json'));
+
+    let fiveSmallestStatesAnswer = [];
+    let arrNumbers = [];
+    let arrStatesAndNumbers = [];
+    for (let index = 0; index < statesData.length; index++) {
+      let eachState = statesData[index].Sigla;
+
+      let abrevState = eachState;
+
+      let cities = JSON.parse(await fs.readFile(`./States/${abrevState}.json`));
+      let numberOfCities = cities.length;
+      arrNumbers.push(numberOfCities);
+      arrStatesAndNumbers.push(abrevState, numberOfCities);
+    }
+
+    let fiveBiggestNumbersSorted = arrNumbers.sort((a, b) => a - b).slice(0, 5);
+
+    for (let index = 0; index < fiveBiggestNumbersSorted.length; index++) {
+      const biggestNumber = fiveBiggestNumbersSorted[index];
+      let state =
+        arrStatesAndNumbers[arrStatesAndNumbers.indexOf(biggestNumber) - 1];
+      let cities =
+        arrStatesAndNumbers[arrStatesAndNumbers.indexOf(biggestNumber)];
+
+      console.log('findBiggestStates -> state', state);
+      console.log('findBiggestStates -> cities', cities);
+      fiveSmallestStatesAnswer.push(`${state}-${cities}`);
+    }
+
+    console.log(
+      'findBiggestStates -> fiveSmallestStatesAnswer',
+      fiveSmallestStatesAnswer.reverse()
+    );
+  } catch (error) {
+    console.log('findSmallestStates -> error', error);
   }
 }
