@@ -1,4 +1,5 @@
 import { promises as fs } from 'fs';
+import { error } from 'console';
 
 arrCitiesNStates();
 
@@ -11,7 +12,12 @@ async function arrCitiesNStates() {
 
     let arrCities = [];
 
-    await fs.mkdir('./States/');
+    await fs.stat('./States/');
+    if (!error) {
+      console.log('file or directory exists');
+    } else if (error.code === 'ENOENT') {
+      fs.mkdir('./States/');
+    }
 
     for (let i = 0; i < statesData.length; i++) {
       for (let index = 0; index < citiesData.length; index++) {
@@ -30,8 +36,10 @@ async function arrCitiesNStates() {
       arrCities = [];
 
       // setTimeout(test(statesData[i].Sigla), 4000);
-      await test(statesData[i].Sigla);
+      await getNumberOfCities(statesData[i].Sigla);
     }
+
+    findBiggestStates();
 
     function createStateJSON(i) {
       return statesData[i].Sigla;
@@ -41,7 +49,7 @@ async function arrCitiesNStates() {
   }
 }
 
-async function test(state) {
+async function getNumberOfCities(state) {
   try {
     let abrevState = state;
     console.log('test -> state', state);
@@ -51,7 +59,49 @@ async function test(state) {
 
     let numberOfCities = cities.length;
     console.log('test -> numberOfCities', numberOfCities);
+    return numberOfCities;
   } catch (error) {
     console.log('test -> error', error);
+  }
+}
+
+async function findBiggestStates() {
+  try {
+    const statesData = JSON.parse(await fs.readFile('Estados.json'));
+
+    let fiveBiggestStatesAnswer = [];
+    let arrNumbers = [];
+    let arrStatesAndNumbers = [];
+    for (let index = 0; index < statesData.length; index++) {
+      let eachState = statesData[index].Sigla;
+
+      let abrevState = eachState;
+
+      let cities = JSON.parse(await fs.readFile(`./States/${abrevState}.json`));
+      let numberOfCities = cities.length;
+      arrNumbers.push(numberOfCities);
+      arrStatesAndNumbers.push(abrevState, numberOfCities);
+    }
+
+    let fiveBiggestNumbersSorted = arrNumbers.sort((a, b) => b - a).slice(0, 5);
+
+    for (let index = 0; index < fiveBiggestNumbersSorted.length; index++) {
+      const biggestNumber = fiveBiggestNumbersSorted[index];
+      let state =
+        arrStatesAndNumbers[arrStatesAndNumbers.indexOf(biggestNumber) - 1];
+      let cities =
+        arrStatesAndNumbers[arrStatesAndNumbers.indexOf(biggestNumber)];
+
+      console.log('findBiggestStates -> state', state);
+      console.log('findBiggestStates -> cities', cities);
+      fiveBiggestStatesAnswer.push(`${state}-${cities}`);
+    }
+
+    console.log(
+      'findBiggestStates -> fiveBiggestStatesAnswer',
+      fiveBiggestStatesAnswer
+    );
+  } catch (error) {
+    console.log('findBiggestStates -> error', error);
   }
 }
