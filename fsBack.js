@@ -165,14 +165,14 @@ async function biggestCityLength() {
       console.log('biggestCityLength -> readStateData', readStateData);
       let counter = 0;
       //FIXME:
-      let answer = readStateData
+      let sortedArray = readStateData
         .map((city) => city.length)
         .sort((a, b) => b - a)
         .slice(0, 20);
 
-      console.log('biggestCityLength -> answer', answer);
+      console.log('biggestCityLength -> sortedArray', sortedArray);
 
-      let maxValue = Math.max(...answer);
+      let maxValue = Math.max(...sortedArray);
       console.log('biggestCityLength -> maxValue', maxValue);
 
       let newCheck = readStateData.find((city) => {
