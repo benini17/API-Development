@@ -40,7 +40,8 @@ async function arrCitiesNStates() {
 
     // findBiggestStates();
     // findSmallestStates();
-    biggestCityLength();
+    // biggestCityLength();
+    smallestCityLength();
 
     function createStateJSON(i) {
       return statesData[i].Sigla;
@@ -163,7 +164,6 @@ async function biggestCityLength() {
       );
 
       console.log('biggestCityLength -> readStateData', readStateData);
-      let counter = 0;
       //FIXME:
       let answer = readStateData
         .map((city) => city.length)
@@ -186,6 +186,46 @@ async function biggestCityLength() {
       let correctAnswer = `${newCheck}-${stateData}`;
       console.log('biggestCityLength -> newCheck', newCheck);
       console.log('biggestCityLength -> correctAnswer', correctAnswer);
+    }
+  } catch (error) {
+    console.log('findSmallestStates -> error', error);
+  }
+}
+
+async function smallestCityLength() {
+  try {
+    const statesData = JSON.parse(await fs.readFile('Estados.json'));
+
+    for (let index = 0; index < statesData.length; index++) {
+      const stateData = statesData[index].Sigla;
+
+      let readStateData = JSON.parse(
+        await fs.readFile(`./States/${stateData}.json`)
+      );
+
+      console.log('smallestCityLength -> readStateData', readStateData);
+      //FIXME:
+      let answer = readStateData
+        .map((city) => city.length)
+        .sort((a, b) => a - b)
+        .slice(0, 20);
+
+      console.log('smallestCityLength -> answer', answer);
+
+      let minValue = Math.min(...answer);
+      console.log('smallestCityLength -> minValue', minValue);
+
+      let newCheck = readStateData.find((city) => {
+        if (city.length == minValue) {
+          console.log('chegou aqui');
+          console.log('smallestCityLength -> city', city);
+          return city;
+        }
+      });
+
+      let correctAnswer = `${newCheck}-${stateData}`;
+      console.log('smallestCityLength -> newCheck', newCheck);
+      console.log('smallestCityLength -> correctAnswer', correctAnswer);
     }
   } catch (error) {
     console.log('findSmallestStates -> error', error);
