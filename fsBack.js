@@ -188,7 +188,7 @@ async function biggestCityLength() {
       console.log('biggestCityLength -> correctAnswer', correctAnswer);
     }
   } catch (error) {
-    console.log('findSmallestStates -> error', error);
+    console.log('biggestCityLength -> error', error);
   }
 }
 
@@ -205,14 +205,14 @@ async function smallestCityLength() {
 
       console.log('smallestCityLength -> readStateData', readStateData);
       //FIXME:
-      let answer = readStateData
+      let sortedArray = readStateData
         .map((city) => city.length)
         .sort((a, b) => a - b)
         .slice(0, 20);
 
-      console.log('smallestCityLength -> answer', answer);
+      console.log('smallestCityLength -> sortedArray', sortedArray);
 
-      let minValue = Math.min(...answer);
+      let minValue = Math.min(...sortedArray);
       console.log('smallestCityLength -> minValue', minValue);
 
       let newCheck = readStateData.find((city) => {
