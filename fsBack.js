@@ -12,12 +12,12 @@ async function arrCitiesNStates() {
 
     let arrCities = [];
 
-    await fs.stat('./States/');
-    if (!error) {
-      console.log('file or directory exists');
-    } else if (error.code === 'ENOENT') {
-      fs.mkdir('./States/');
-    }
+    // await fs.stat('./States/');
+    // if (!error) {
+    //   console.log('file or directory exists');
+    // } else if (error.code === 'ENOENT') {
+    // }
+    fs.mkdir('./States/');
 
     for (let i = 0; i < statesData.length; i++) {
       for (let index = 0; index < citiesData.length; index++) {
@@ -35,12 +35,12 @@ async function arrCitiesNStates() {
       );
       arrCities = [];
 
-      // setTimeout(test(statesData[i].Sigla), 4000);
       await getNumberOfCities(statesData[i].Sigla);
     }
 
-    findBiggestStates();
-    findSmallestStates();
+    // findBiggestStates();
+    // findSmallestStates();
+    biggestCityLength();
 
     function createStateJSON(i) {
       return statesData[i].Sigla;
@@ -53,13 +53,13 @@ async function arrCitiesNStates() {
 async function getNumberOfCities(state) {
   try {
     let abrevState = state;
-    console.log('test -> state', state);
+    // console.log('test -> state', state);
 
     const statesData = JSON.parse(await fs.readFile('Estados.json'));
     let cities = JSON.parse(await fs.readFile(`./States/${abrevState}.json`));
 
     let numberOfCities = cities.length;
-    console.log('test -> numberOfCities', numberOfCities);
+    // console.log('test -> numberOfCities', numberOfCities);
     return numberOfCities;
   } catch (error) {
     console.log('test -> error', error);
@@ -150,46 +150,44 @@ async function findSmallestStates() {
   }
 }
 
-// async function biggestCityLength() {
-//   try {
-//     const statesData = JSON.parse(await fs.readFile('Estados.json'));
-//     const statesData = JSON.parse(await fs.readFile('Cidades.json'));
+async function biggestCityLength() {
+  try {
+    const statesData = JSON.parse(await fs.readFile('Estados.json'));
+    const citiesData = JSON.parse(await fs.readFile('Cidades.json'));
 
-//     let fiveSmallestStatesAnswer = [];
-//     let arrNumbers = [];
-//     let arrStatesAndNumbers = [];
-//     for (let index = 0; index < statesData.length; index++) {
-//       let eachState = statesData[index].Sigla;
+    for (let index = 0; index < statesData.length; index++) {
+      const stateData = statesData[index].Sigla;
 
-//       let abrevState = eachState;
+      let readStateData = JSON.parse(
+        await fs.readFile(`./States/${stateData}.json`)
+      );
 
-//       let cities = JSON.parse(await fs.readFile(`./States/${abrevState}.json`));
-//       let numberOfCities = cities.length;
-//       arrNumbers.push(numberOfCities);
-//       arrStatesAndNumbers.push(abrevState, numberOfCities);
-//     }
+      console.log('biggestCityLength -> readStateData', readStateData);
+      let counter = 0;
+      //FIXME:
+      let answer = readStateData
+        .map((city) => city.length)
+        .sort((a, b) => b - a)
+        .slice(0, 20);
 
-//     let fiveSmallestNumbersSorted = arrNumbers
-//       .sort((a, b) => a - b)
-//       .slice(0, 5);
+      console.log('biggestCityLength -> answer', answer);
 
-//     for (let index = 0; index < fiveSmallestNumbersSorted.length; index++) {
-//       const smallestNumber = fiveSmallestNumbersSorted[index];
-//       let state =
-//         arrStatesAndNumbers[arrStatesAndNumbers.indexOf(smallestNumber) - 1];
-//       let cities =
-//         arrStatesAndNumbers[arrStatesAndNumbers.indexOf(smallestNumber)];
+      let maxValue = Math.max(...answer);
+      console.log('biggestCityLength -> maxValue', maxValue);
 
-//       console.log('findBiggestStates -> state', state);
-//       console.log('findBiggestStates -> cities', cities);
-//       fiveSmallestStatesAnswer.push(`${state}-${cities}`);
-//     }
+      let newCheck = readStateData.find((city) => {
+        if (city.length == maxValue) {
+          console.log('chegou aqui');
+          console.log('biggestCityLength -> city', city);
+          return city;
+        }
+      });
 
-//     console.log(
-//       'findBiggestStates -> fiveSmallestStatesAnswer',
-//       fiveSmallestStatesAnswer.reverse()
-//     );
-//   } catch (error) {
-//     console.log('findSmallestStates -> error', error);
-//   }
-// }
+      let correctAnswer = `${newCheck}-${stateData}`;
+      console.log('biggestCityLength -> newCheck', newCheck);
+      console.log('biggestCityLength -> correctAnswer', correctAnswer);
+    }
+  } catch (error) {
+    console.log('findSmallestStates -> error', error);
+  }
+}
