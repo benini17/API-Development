@@ -41,7 +41,8 @@ async function arrCitiesNStates() {
     // findBiggestStates();
     // findSmallestStates();
     // biggestCityLength();
-    smallestCityLength();
+    // smallestCityLength();
+    biggestCityLengthAmongAll();
 
     function createStateJSON(i) {
       return statesData[i].Sigla;
@@ -228,6 +229,51 @@ async function smallestCityLength() {
       console.log('smallestCityLength -> correctAnswer', correctAnswer);
     }
   } catch (error) {
-    console.log('findSmallestStates -> error', error);
+    console.log('smallestCityLength -> error', error);
+  }
+}
+
+async function biggestCityLengthAmongAll() {
+  try {
+    const citiesData = JSON.parse(await fs.readFile('Cidades.json'));
+    const statesData = JSON.parse(await fs.readFile('Estados.json'));
+
+    const sortedCitiesData = citiesData.sort((a, b) => {
+      parseInt(a.Nome) - parseInt(b.Nome);
+    });
+
+    let sortedArray = sortedCitiesData
+      .map((city) => city.Nome.length)
+      .sort((a, b) => b - a)
+      .slice(0, 20);
+
+    console.log('biggestCityLengthAmongAll -> sortedArray', sortedArray);
+
+    let maxValue = Math.max(...sortedArray);
+    console.log('biggestCityLengthAmongAll -> maxValue', maxValue);
+
+    let newCheck = sortedCitiesData.find((city) => {
+      console.log('biggestCityLength -> city', city);
+      if (city.Nome.length == maxValue) {
+        console.log('chegou aqui');
+        return city.Nome;
+      }
+    });
+
+    let stateCode = statesData.find((state) => {
+      if (state.ID == newCheck.Estado) {
+        return state;
+      }
+      console.log(
+        'biggestCityLengthAmongAll -> newCheck.Estado',
+        newCheck.Estado
+      );
+      console.log('biggestCityLengthAmongAll -> state.ID', state.ID);
+    });
+
+    let correctAnswer = `${newCheck.Nome}-${stateCode.Sigla}`;
+    console.log('biggestCityLengthAmongAll -> correctAnswer', correctAnswer);
+  } catch (error) {
+    console.log('biggestCityLengthAmongAll -> error', error);
   }
 }
