@@ -1,69 +1,57 @@
 import { promises as fs } from 'fs';
 import { error } from 'console';
 
-arrCitiesNStates();
+createJSONFilesNFolder();
 
-async function arrCitiesNStates() {
+async function createJSONFilesNFolder() {
   try {
     const statesData = JSON.parse(await fs.readFile('Estados.json'));
     const citiesData = JSON.parse(await fs.readFile('Cidades.json'));
-    // console.log(statesData);
-    // console.log(citiesData);
 
     let arrCities = [];
 
-    await fs.stat('./States/');
-    if (!error) {
-      console.log('file or directory exists');
-    } else if (error.code === 'ENOENT') {
-      fs.mkdir('./States/');
-    }
+    // await fs.stat('./States/');
+    // if (!error) {
+    //   console.log('file or directory exists');
+    // } else if (error.code === 'ENOENT') {
+    // }
+    // fs.mkdir('./States/');
 
-    for (let i = 0; i < statesData.length; i++) {
-      for (let index = 0; index < citiesData.length; index++) {
-        let city = citiesData[index];
-        if (statesData[i].ID == city.Estado) {
+    let stateCounter = 0;
+    statesData.map((state) => {
+      citiesData.map((city) => {
+        if (statesData[stateCounter].ID == city.Estado) {
           arrCities.push(city.Nome);
         }
-      }
-      // console.log(arrCities);
-      await JSON.stringify(
-        fs.writeFile(
-          `./States/${createStateJSON(i)}.json`,
-          JSON.stringify(arrCities)
-        )
+      });
+      JSON.stringify(
+        fs.writeFile(`./States/${state.Sigla}.json`, JSON.stringify(arrCities))
       );
       arrCities = [];
+      stateCounter = stateCounter + 1;
 
-      await getNumberOfCities(statesData[i].Sigla);
-    }
+      getNumberOfCitiesPerState(statesData[stateCounter].Sigla);
+    });
 
     // findBiggestStates();
     // findSmallestStates();
     // biggestCityLength();
     // smallestCityLength();
     // biggestCityLengthAmongAll();
-    smallestCityLengthAmongAll();
-
-    function createStateJSON(i) {
-      return statesData[i].Sigla;
-    }
+    // smallestCityLengthAmongAll();
   } catch (error) {
     console.log(error);
   }
 }
 
-async function getNumberOfCities(state) {
+async function getNumberOfCitiesPerState(state) {
   try {
     let abrevState = state;
-    // console.log('test -> state', state);
 
-    const statesData = JSON.parse(await fs.readFile('Estados.json'));
     let cities = JSON.parse(await fs.readFile(`./States/${abrevState}.json`));
 
-    let numberOfCities = cities.length;
-    // console.log('test -> numberOfCities', numberOfCities);
-    return numberOfCities;
+    let numberOfCities = `${abrevState} - ${cities.length}`;
+    console.log('test -> numberOfCities', numberOfCities);
   } catch (error) {
     console.log('test -> error', error);
   }
