@@ -12,12 +12,12 @@ async function arrCitiesNStates() {
 
     let arrCities = [];
 
-    // await fs.stat('./States/');
-    // if (!error) {
-    //   console.log('file or directory exists');
-    // } else if (error.code === 'ENOENT') {
-    // }
-    fs.mkdir('./States/');
+    await fs.stat('./States/');
+    if (!error) {
+      console.log('file or directory exists');
+    } else if (error.code === 'ENOENT') {
+      fs.mkdir('./States/');
+    }
 
     for (let i = 0; i < statesData.length; i++) {
       for (let index = 0; index < citiesData.length; index++) {
@@ -42,7 +42,8 @@ async function arrCitiesNStates() {
     // findSmallestStates();
     // biggestCityLength();
     // smallestCityLength();
-    biggestCityLengthAmongAll();
+    // biggestCityLengthAmongAll();
+    smallestCityLengthAmongAll();
 
     function createStateJSON(i) {
       return statesData[i].Sigla;
@@ -239,7 +240,7 @@ async function biggestCityLengthAmongAll() {
     const statesData = JSON.parse(await fs.readFile('Estados.json'));
 
     const sortedCitiesData = citiesData.sort((a, b) => {
-      parseInt(a.Nome) - parseInt(b.Nome);
+      a.Nome - b.Nome;
     });
 
     let sortedArray = sortedCitiesData
@@ -272,6 +273,44 @@ async function biggestCityLengthAmongAll() {
     });
 
     let correctAnswer = `${newCheck.Nome}-${stateCode.Sigla}`;
+    console.log('biggestCityLengthAmongAll -> correctAnswer', correctAnswer);
+  } catch (error) {
+    console.log('biggestCityLengthAmongAll -> error', error);
+  }
+}
+
+async function smallestCityLengthAmongAll() {
+  try {
+    const citiesData = JSON.parse(await fs.readFile('Cidades.json'));
+    const statesData = JSON.parse(await fs.readFile('Estados.json'));
+
+    const sortedCitiesData = citiesData.sort((a, b) => {
+      a.Nome - b.Nome;
+    });
+
+    let smallestCity = citiesData[0].Nome;
+    sortedCitiesData.map((city) => {
+      if (city.Nome.length < smallestCity.length) {
+        smallestCity = city.Nome;
+      } else if (city.Nome.length == smallestCity.length) {
+        let result = [city.Nome, smallestCity].sort();
+        smallestCity = result[0];
+      }
+    });
+
+    let findCityInfo = citiesData.find((city) => {
+      if (city.Nome == smallestCity) {
+        return city;
+      }
+    });
+
+    let stateCode = statesData.find((state) => {
+      if (state.ID == findCityInfo.Estado) {
+        return state;
+      }
+    });
+
+    let correctAnswer = `${smallestCity}-${stateCode.Sigla}`;
     console.log('biggestCityLengthAmongAll -> correctAnswer', correctAnswer);
   } catch (error) {
     console.log('biggestCityLengthAmongAll -> error', error);
