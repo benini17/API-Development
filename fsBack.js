@@ -24,9 +24,8 @@ async function createJSONFilesNFolder() {
           arrCities.push(city.Nome);
         }
       });
-      JSON.stringify(
-        fs.writeFile(`./States/${state.Sigla}.json`, JSON.stringify(arrCities))
-      );
+
+      fs.writeFile(`./States/${state.Sigla}.json`, JSON.stringify(arrCities));
       arrCities = [];
       stateCounter = stateCounter + 1;
 
